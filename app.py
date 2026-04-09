@@ -127,40 +127,40 @@ if selected_foods:
 
     st.altair_chart(chart, use_container_width=True)
 
-
-    if "saved_meals" not in st.session_state:
-        st.session_state.saved_meals = []
-    
-    meal_name = st.text_input("Nombre de la comida", placeholder="Ej: Desayuno 9 abril")
-
-    if st.button("Guardar comida"):
-        if meal_name.strip() == "":
-            st.warning("Pon un nombre a la comida antes de guardarla")
-        else:
-            st.session_state.saved_meals.append({
-                "nombre": meal_name,
-                "alimentos": meal_df,
-                "totales": totals
-            })
-            st.success(f"Comida '{meal_name}' guardada correctamente")
-
-    st.sidebar.header("📚 Comidas guardadas")
-
-    if st.session_state.saved_meals:
-        selected_saved = st.sidebar.selectbox(
-            "Selecciona una comida guardada",
-            [meal["nombre"] for meal in st.session_state.saved_meals]
-        )
-        saved = next(m for m in st.session_state.saved_meals if m["nombre"] == selected_saved)
-        st.subheader(f"📌 {selected_saved} – Alimentos")
-        st.dataframe(saved["alimentos"], use_container_width=True, hide_index=True)
-
-        st.subheader(f"📌 {selected_saved} – Totales")
-        st.dataframe(saved["totales"], use_container_width=True, hide_index=True)
-
-    else:
-        st.sidebar.info("No hay comidas guardadas todavía.")
-
-
 else:
     st.info("Selecciona al menos un alimento.")
+
+if "saved_meals" not in st.session_state:
+    st.session_state.saved_meals = []
+
+meal_name = st.text_input("Nombre de la comida", placeholder="Ej: Desayuno 9 abril")
+
+if st.button("Guardar comida"):
+    if meal_name.strip() == "":
+        st.warning("Pon un nombre a la comida antes de guardarla")
+    else:
+        st.session_state.saved_meals.append({
+            "nombre": meal_name,
+            "alimentos": meal_df,
+            "totales": totals
+        })
+        st.success(f"Comida '{meal_name}' guardada correctamente")
+
+st.sidebar.header("📚 Comidas guardadas")
+
+if st.session_state.saved_meals:
+    selected_saved = st.sidebar.selectbox(
+        "Selecciona una comida guardada",
+        [meal["nombre"] for meal in st.session_state.saved_meals]
+    )
+    saved = next(m for m in st.session_state.saved_meals if m["nombre"] == selected_saved)
+    st.subheader(f"📌 {selected_saved} – Alimentos")
+    st.dataframe(saved["alimentos"], use_container_width=True, hide_index=True)
+
+    st.subheader(f"📌 {selected_saved} – Totales")
+    st.dataframe(saved["totales"], use_container_width=True, hide_index=True)
+
+else:
+    st.sidebar.info("No hay comidas guardadas todavía.")
+
+
