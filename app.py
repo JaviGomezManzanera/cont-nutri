@@ -12,6 +12,59 @@ st.set_page_config(
     layout="wide"
 )
 
+# ---------------------------
+# MODO COMPACTO PARA MÓVIL
+# ---------------------------
+st.markdown("""
+<style>
+
+    /* Reducir padding general */
+    .block-container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    /* Sidebar más estrecho */
+    [data-testid="stSidebar"] {
+        width: 240px !important;
+    }
+
+    /* Tablas más compactas */
+    table {
+        font-size: 13px !important;
+    }
+
+    /* Inputs más pequeños */
+    input, select, textarea {
+        font-size: 14px !important;
+        padding: 4px !important;
+    }
+
+    /* Botones más compactos */
+    button[kind="primary"], button[kind="secondary"] {
+        padding-top: 0.3rem !important;
+        padding-bottom: 0.3rem !important;
+        font-size: 14px !important;
+    }
+
+    /* Métricas más pequeñas */
+    [data-testid="stMetricValue"] {
+        font-size: 20px !important;
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 12px !important;
+    }
+
+    /* Evitar scroll horizontal en móvil */
+    .dataframe {
+        overflow-x: auto;
+    }
+
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🍽️ Constructor de Comidas - BEDCA")
 
 # ---------------------------
@@ -104,7 +157,9 @@ if selected_foods:
     totals["Total"] = totals["Total"].round(2)
     st.subheader("📦 Resumen rápido")
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2 = st.columns(2)
+    col3, col4 = st.columns(2)
+
 
     col1.metric("Kcal", f"{totals.loc[totals['Nutriente']=='energia_kcal','Total'].values[0]:.0f}")
     col2.metric("Proteína (g)", f"{totals.loc[totals['Nutriente']=='proteina_total','Total'].values[0]:.1f}")
@@ -159,6 +214,46 @@ if st.session_state.saved_meals:
 
     st.subheader(f"📌 {selected_saved} – Totales")
     st.dataframe(saved["totales"], use_container_width=True, hide_index=True)
+
+    col_del, col_but_nn= st.columns(2)
+    col_dup, col_nn = st.columns(2)
+
+    if col_del.button("🗑️ Borrar comida seleccionada"):
+        st.session_state.saved_meals = [
+            m for m in st.session_state.saved_meals if m["nombre"] != selected_saved
+        ]
+        st.success("Comida borrada")
+    new_name = col_nn.text_input("Renombrar comida", value=selected_saved)
+
+    if col_but_nn.button("Guardar nuevo nombre"):
+        saved["nombre"] = new_name
+        st.success("Nombre actualizado")
+    
+    if col_dup.button("📄 Duplicar comida"):
+        copia = {
+            "nombre": saved["nombre"] + " (copia)",
+            "alimentos": saved["alimentos"].copy(),
+            "totales": saved["totales"].copy()
+        }
+        st.session_state.saved_meals.append(copia)
+        st.success("Comida duplicada")
+
+    st.sidebar.header("📅 Totales del día")
+
+    if st.sidebar.button("Calcular totales del día"):
+        if not st.session_state.saved_meals:
+            st.warning("No hay comidas guardadas para sumar")
+        else:
+            # Sumar todos los totales de todas las comidas
+            df_totales = pd.concat([meal["totales"] for meal in st.session_state.saved_meals])
+            totales_dia = df_totales.groupby("Nutriente")["Total"].sum().reset_index()
+
+            # Mostrar resultado
+            st.subheader("📊 Totales del día")
+            st.dataframe(totales_dia, use_container_width=True, hide_index=True)
+    csv = saved["alimentos"].to_csv(index=False, sep=';').encode("utf-8")
+    st.download_button("⬇️ Descargar alimentos", csv, "comida.csv")
+
 
 else:
     st.sidebar.info("No hay comidas guardadas todavía.")
