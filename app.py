@@ -80,7 +80,7 @@ if selected_foods:
     totals = meal_df[nutrientes].sum().reset_index()
     totals.columns = ["Nutriente", "Total"]
 
-    st.dataframe(totals, use_container_width=True)
+    st.dataframe(totals, use_container_width=True, hide_index=True)
 
 else:
     st.info("Selecciona al menos un alimento.")
