@@ -70,16 +70,16 @@ st.markdown("""
 
 @media (max-width: 600px) {
 
-    /* Forzar columnas en horizontal */
-    .css-1kyxreq, .css-1r6slb0, .css-1l269bu {
+    /* Forzar que el contenedor de columnas no se apile */
+    [data-testid="stHorizontalBlock"] {
         flex-direction: row !important;
         flex-wrap: wrap !important;
         justify-content: space-between !important;
     }
 
-    /* Ajustar cada columna para que quepan 2 por fila */
-    .css-1kyxreq > div, .css-1r6slb0 > div, .css-1l269bu > div {
-        min-width: 48% !important;
+    /* Cada columna ocupa el 48% del ancho → 2 columnas por fila */
+    [data-testid="column"] {
+        flex: 0 0 48% !important;
         max-width: 48% !important;
     }
 }
