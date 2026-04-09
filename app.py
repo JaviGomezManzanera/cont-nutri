@@ -237,8 +237,8 @@ if st.session_state.saved_meals:
     st.subheader(f"📌 {selected_saved} – Totales")
     st.dataframe(saved["totales"], use_container_width=True, hide_index=True)
 
-    col_del, col_but_nn= st.columns(2)
-    col_dup, col_nn = st.columns(2)
+    col_del, col_dup, col_nn, col_but_nn= st.columns(4)
+
 
     if col_del.button("🗑️ Borrar comida seleccionada"):
         st.session_state.saved_meals = [
