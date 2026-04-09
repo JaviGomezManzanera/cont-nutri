@@ -65,6 +65,28 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+
+@media (max-width: 600px) {
+
+    /* Forzar columnas en horizontal */
+    .css-1kyxreq, .css-1r6slb0, .css-1l269bu {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+    }
+
+    /* Ajustar cada columna para que quepan 2 por fila */
+    .css-1kyxreq > div, .css-1r6slb0 > div, .css-1l269bu > div {
+        min-width: 48% !important;
+        max-width: 48% !important;
+    }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🍽️ Constructor de Comidas - BEDCA")
 
 # ---------------------------
