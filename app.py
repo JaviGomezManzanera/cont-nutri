@@ -70,7 +70,7 @@ if selected_foods:
     # RESULTADOS POR ALIMENTO
     # ---------------------------
     st.subheader("🥗 Nutrientes por alimento")
-    st.dataframe(meal_df, use_container_width=True)
+    st.dataframe(meal_df, use_container_width=True, hide_index=True)
 
     # ---------------------------
     # TOTALES DE LA COMIDA
